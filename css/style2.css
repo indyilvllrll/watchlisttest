@@ -1,0 +1,167 @@
+body {
+    background-color: #F8F1E9 /*any color with lower opacity*/
+}
+
+header {
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+
+
+.bg-image {
+    background-image: url('../images/sky.png');
+    background-size: cover;
+    background-position: center;
+}
+
+.text-shadow {
+    letter-spacing: 7px;
+    text-shadow: 2px 2px 4px #00ffff, 4px 4px 6px #00ccff, 6px 6px 8px #0099ff, 8px 8px 10px #0066ff, 10px 10px 12px #0033ff, 12px 12px 14px #6600ff;
+}
+
+
+
+.fs-3 {
+    font-size: 80px !important ;
+}
+
+section {
+    margin-top: 20px;
+}
+
+article {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+    article header {
+        padding: 15px;
+        color: #ffffff;
+    }
+
+
+
+        article .card i, article .card h2 {
+            color: #000000;
+        }
+
+
+
+
+
+
+
+
+
+.divider {
+    height: 3rem;
+    background-color: #F8F1E9; /*any color with lower opacity*/
+    border: solid rgba(0, 0, 0, 0.205);
+    border-width: 1px 0;
+    box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+}
+
+.custom-bg-color-1st {
+    background-color: #5B85B4 !important;
+}
+
+.custom-bg-color-2nd {
+    background-color: #755BB4 !important;
+}
+
+.custom-bg-color-3rd {
+    background-color: #E1CE23 !important;
+}
+
+.custom-bg-color-4th {
+    background-color: #5FB45B !important;
+}
+
+.acc-warning {
+    --bs-accordion-btn-bg: #ffc107;
+    --bs-accordion-active-bg: #ffc107;
+}
+
+.acc-secondary {
+    --bs-accordion-btn-bg: #adb5bd;
+    --bs-accordion-active-bg: #adb5bd;
+}
+
+.acc-success {
+    --bs-accordion-btn-bg: #198754;
+    --bs-accordion-active-bg: #198754;
+}
+
+/* Table Hover 1 */
+.table-hover1 tbody tr:hover,
+.table-active1.active,
+.table-active1:active {
+    background-color: #E8FFFF;
+}
+
+    .table-hover1 tbody tr:hover td,
+    .table-hover1 tbody tr:hover th,
+    .table-active1.active td,
+    .table-active1:active td,
+    .table-active1.active th,
+    .table-active1:active th {
+        background-color: #E8FFFF;
+    }
+
+/* Table Hover 2 */
+.table-hover2 tbody tr:hover,
+.table-active2.active,
+.table-active2:active {
+    background-color: #9DAED8;
+}
+
+    .table-hover2 tbody tr:hover td,
+    .table-hover2 tbody tr:hover th,
+    .table-active2.active td,
+    .table-active2:active td,
+    .table-active2.active th,
+    .table-active2:active th {
+        background-color: #9DAED8;
+    }
+
+/* Table Hover 3 */
+.table-hover3 tbody tr:hover,
+.table-active3.active,
+.table-active3:active {
+    background-color: #FFF9BF;
+}
+
+    .table-hover3 tbody tr:hover td,
+    .table-hover3 tbody tr:hover th,
+    .table-active3.active td,
+    .table-active3:active td,
+    .table-active3.active th,
+    .table-active3:active th {
+        background-color: #FFF9BF;
+    }
+
+
+.table-hover4 tbody tr:hover {
+    background-color: #EBFFE8;
+}
+
+    .table-hover4 tbody tr:hover td,
+    .table-hover4 tbody tr:hover th {
+        background-color: #EBFFE8;
+    }
+
+.table-active4.active, .table-active4:active {
+    background-color: #EBFFE8;
+}
+
+    .table-active4.active td,
+    .table-active4:active td,
+    .table-active4.active th,
+    .table-active4:active th {
+        background-color: #EBFFE8;
+    }
+
