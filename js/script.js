@@ -25,7 +25,7 @@ const animeData = [
     },
 ];
 
-const tableContainer = document.querySelector('#acc-table-completed tbody');
+const tableContainer = document.querySelector('#acc-table-completed-body');
 
 // Function to generate a table row
 function createTableRow(anime) {
