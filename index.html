@@ -321,7 +321,7 @@
             <div id="acc-table-ongoing" class="accordion-collapse collapse show" data-bs-parent="#accordion-table-ongoing">
                 <div class="accordion-body">
                     <!-- Table Proper -->
-                    <table class="table table-striped table-responsive-md table-sm table-hover3">
+                    <table id="animeOngoinglistTable" class="table table-striped table-responsive-md table-sm table-hover3">
                         <thead class="table-dark">
                             <tr>
                                 <th scope="col">Anime No</th>
@@ -335,7 +335,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+<!--                            <tr>
                                 <th class="align-middle" scope="row">ANI-00001</th>
                                 <td class="align-middle">Attack on Titan</td>
                                 <td class="align-middle">Action, Drama, Fantasy</td>
@@ -391,7 +391,7 @@
                             </tr>
 
 
-
+-->
                         </tbody>
                     </table>
                     <!-- END-Table Proper -->
@@ -578,12 +578,12 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p><strong>ID:</strong> <span id="viewID"></span></p>
-                    <p><strong>Title:</strong> <span id="viewTitle"></span></p>
-                    <p><strong>Genre:</strong> <span id="viewGenre"></span></p>
-                    <p><strong>Release Year:</strong> <span id="viewReleaseYear"></span></p>
-                    <p><strong>Description:</strong> <span id="viewDescription"></span></p>
-                    <p><strong>Status:</strong> <span id="viewStatus"></span></p>
+                    <p><strong>ID:</strong> <span id="viewAnimeModal-viewID"></span></p>
+                    <p><strong>Title:</strong> <span id="viewAnimeModal-viewTitle"></span></p>
+                    <p><strong>Genre:</strong> <span id="viewAnimeModal-viewGenre"></span></p>
+                    <p><strong>Release Year:</strong> <span id="viewAnimeModal-viewReleaseYear"></span></p>
+                    <p><strong>Description:</strong> <span id="viewAnimeModal-viewDescription"></span></p>
+                    <p><strong>Status:</strong> <span id="viewAnimeModal-viewStatus"></span></p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -602,12 +602,12 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p><strong>ID:</strong> <span id="viewID"></span></p>
-                    <p><strong>Title:</strong> <span id="viewTitle"></span></p>
-                    <p><strong>Genre:</strong> <span id="viewGenre"></span></p>
-                    <p><strong>Release Year:</strong> <span id="viewReleaseYear"></span></p>
-                    <p><strong>Description:</strong> <span id="viewDescription"></span></p>
-                    <p><strong>Status:</strong> <span id="viewStatus"></span></p>
+                    <p><strong>ID:</strong> <span id="viewWatchlistModal-viewID"></span></p>
+                    <p><strong>Title:</strong> <span id="viewWatchlistModal-viewTitle"></span></p>
+                    <p><strong>Genre:</strong> <span id="viewWatchlistModal-viewGenre"></span></p>
+                    <p><strong>Release Year:</strong> <span id="viewWatchlistModal-viewReleaseYear"></span></p>
+                    <p><strong>Description:</strong> <span id="viewWatchlistModal-viewDescription"></span></p>
+                    <p><strong>Status:</strong> <span id="viewWatchlistModal-viewStatus"></span></p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -616,7 +616,6 @@
             </div>
         </div>
     </div>
-
 
     <!-- deelte modal watchlist -->
     <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">

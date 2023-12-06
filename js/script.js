@@ -277,14 +277,16 @@ document.getElementById('animeLibraryTable').addEventListener('click', function 
         // Find the corresponding anime in the library
         selectedAnime = animeLibrary.find(anime => anime.id === animeID);
 
-        // Populate the modal with anime details
-        document.getElementById('viewID').textContent = selectedAnime.id;
-        document.getElementById('viewTitle').textContent = selectedAnime.title;
-        document.getElementById('viewGenre').textContent = selectedAnime.genre;
-        document.getElementById('viewReleaseYear').textContent = selectedAnime.releaseYear;
-        document.getElementById('viewDescription').textContent = selectedAnime.description;
-        document.getElementById('viewStatus').textContent = selectedAnime.status;
+        const modalID = 'viewAnimeModal';
 
+
+        // Populate the modal with anime details
+        document.getElementById(`${modalID}-viewID`).textContent = selectedAnime.id;
+        document.getElementById(`${modalID}-viewTitle`).textContent = selectedAnime.title;
+        document.getElementById(`${modalID}-viewGenre`).textContent = selectedAnime.genre;
+        document.getElementById(`${modalID}-viewReleaseYear`).textContent = selectedAnime.releaseYear;
+        document.getElementById(`${modalID}-viewDescription`).textContent = selectedAnime.description;
+        document.getElementById(`${modalID}-viewStatus`).textContent = selectedAnime.status;
         // Show the modal
         $('#viewAnimeModal').modal('show');
 
@@ -351,11 +353,6 @@ document.getElementById('animeWatchlistTable').addEventListener('click', functio
     }
 });
 
-
-
-
-
-
 function renderWatchlistTable() {
     const tableBody = document.getElementById('animeWatchlistTable').getElementsByTagName('tbody')[0];
     tableBody.innerHTML = '';
@@ -416,75 +413,132 @@ function addToWatchlist(anime) {
 }
 
 
+
+
+///////////////////////////////////////
+
+function addToOngoingAndRemoveFromWatchlist(anime) {
+    // Remove the anime from the watchlist
+    const watchlistIndex = watchlist.findIndex(watchedAnime => watchedAnime.id === anime.id);
+    if (watchlistIndex !== -1) {
+        watchlist.splice(watchlistIndex, 1);
+    }
+
+    // Update the anime's status in the library to "ongoing"
+    const libraryIndex = animeLibrary.findIndex(libraryAnime => libraryAnime.id === anime.id);
+    if (libraryIndex !== -1) {
+        animeLibrary[libraryIndex].status = 'ongoing';
+        renderAnimeLibraryTable(); // Update the library table
+    }
+
+    // Add the anime to the ongoing list
+    ongoing.push({
+        id: anime.id,
+        title: anime.title,
+        genre: anime.genre,
+        releaseYear: anime.releaseYear,
+        description: anime.description,
+        status: 'ongoing',
+        dateStarted: getCurrentDate() // Set the current date
+    });
+
+    // Update the ongoing list table
+    renderOngoinglistTable();
+
+    // Update the watchlist table
+    renderWatchlistTable();
+}
+
+
+function renderOngoinglistTable() {
+    const tableBody = document.getElementById('animeOngoinglistTable').getElementsByTagName('tbody')[0];
+    tableBody.innerHTML = '';
+
+    ongoing.forEach(anime => {
+        const row = tableBody.insertRow();
+        row.innerHTML = `
+            <td class="align-middle">${anime.id}</td>
+            <td class="align-middle">${anime.title}</td>
+            <td class="align-middle">${anime.genre}</td>
+            <td class="align-middle">${anime.releaseYear}</td>
+            <td class="align-middle">${anime.description}</td>
+            <td class="align-middle">${anime.dateStarted}</td>
+            <td class="align-middle"><span class = "status-cell badge rounded-pill"> ${anime.status}</span></td>
+            <td class="col-lg-2 align-middle text-center">
+                <button class="btn btn-info view-ticket" data-ticket-no="${anime.id}">view</button>
+            </td>
+        `;
+
+        const statusCell = row.querySelector('.status-cell');
+
+        // Add classes based on the anime's status
+        if (anime.status === 'ongoing') {
+            addClassesToElement(statusCell, ['text-bg-warning']);
+        } else if (anime.status === 'completed') {
+            addClassesToElement(statusCell, ['text-bg-success']);
+        } else if (anime.status === 'unlisted') {
+            addClassesToElement(statusCell, ['text-bg-secondary']);
+        } else if (anime.status === 'watchlist') {
+            addClassesToElement(statusCell, ['text-bg-light']);
+        }
+    });
+    // Add click handler for "Add to Ongoing" button inside the modal
+}
+document.getElementById('addToOngoingBtn').addEventListener('click', function () {
+    // Check if the status is "unlisted"
+    if (selectedAnime.status === 'watchlist') {
+        // Add the anime to the ongoing list and remove from the watchlist
+        addToOngoingAndRemoveFromWatchlist(selectedAnime);
+
+        // Close the modal
+        $('#viewWatchlistModal').modal('hide');
+    }
+});
+///////// VIEW Watchlist ///////////
+
+// Update the "View" button click handler
+document.getElementById('animeWatchlistTable').addEventListener('click', function (event) {
+    const target = event.target;
+
+    // Check if the clicked element is a "View" button
+    if (target.classList.contains('view-ticket')) {
+        // Get the anime ID from the data attribute
+        const animeID = target.getAttribute('data-ticket-no');
+
+        // Find the corresponding anime in the library
+        selectedAnime = watchlist.find(anime => anime.id === animeID);
+
+        const modalID = 'viewWatchlistModal';
+
+        // Populate the modal with anime details
+        document.getElementById(`${modalID}-viewID`).textContent = selectedAnime.id;
+        document.getElementById(`${modalID}-viewTitle`).textContent = selectedAnime.title;
+        document.getElementById(`${modalID}-viewGenre`).textContent = selectedAnime.genre;
+        document.getElementById(`${modalID}-viewReleaseYear`).textContent = selectedAnime.releaseYear;
+        document.getElementById(`${modalID}-viewDescription`).textContent = selectedAnime.description;
+        document.getElementById(`${modalID}-viewStatus`).textContent = selectedAnime.status;
+
+        // Show the modal
+        $('#viewWatchlistModal').modal('show');
+
+    }
+});
+
+function getCurrentDate() {
+    const today = new Date();
+    const month = today.getMonth() + 1; // Months are zero-based
+    const day = today.getDate();
+    const year = today.getFullYear().toString().slice(2);
+    return `${month}/${day}/${year}`;
+}
+
+
+
+
 // Initialize the table when the page loads
 window.onload = function () {
     renderWatchlistTable();
     renderAnimeLibraryTable();
+    renderOngoinglistTable();
 };
 
-
-
-
-
-
-
-/*/////////////////////////////*/
-/*const animeData = [
-    {
-        id: 'ANI-00003',
-        title: 'Death Note',
-        genre: 'Mystery, Psychological, Supernatural',
-        releaseDate: '2006',
-        description: 'Light Yagami discovers a mysterious notebook that allows him to kill anyone whose name he writes in it. As he takes on the identity of "Kira," a battle of wits ensues with the genius detective known as L.',
-        dateStarted: '11/11/23',
-        dateCompleted: '11/26/23',
-        status: 'completed'
-    },
-    {
-        id: 'ANI-00005',
-        title: 'Fullmetal Alchemist: Brotherhood',
-        genre: 'Action, Adventure, Fantasy',
-        releaseDate: '2009',
-        description: 'Brothers Edward and Alphonse Elric use alchemy in their quest to find the Philosopher\'s Stone and restore their bodies after a failed alchemical experiment.',
-        dateStarted: '11/11/23',
-        dateCompleted: '11/26/23',
-        status: 'completed'
-    },
-];
-
-const tableContainer = document.querySelector('#acc-table-completed-body');
-
-// Function to generate a table row
-function createTableRow(anime) {
-    const row = document.createElement('tr');
-    row.innerHTML = `
-        <th class="align-middle" scope="row">${anime.id}</th>
-        <td class="align-middle">${anime.title}</td>
-        <td class="align-middle">${anime.genre}</td>
-        <td class="align-middle">${anime.releaseDate}</td>
-        <td class="align-middle">${anime.description}</td>
-        <td class="align-middle">${anime.dateStarted}</td>
-        <td class="align-middle">${anime.dateCompleted}</td>
-        <td class="align-middle"><span class="badge rounded-pill text-bg-success">${anime.status}</span></td>
-        <td class="col-lg-2 align-middle text-center">
-            <button class="btn btn-info view-ticket" data-ticket-no="${anime.id}">view</button>
-            <button class="btn btn-warning">Edit</button>
-            <button class="btn btn-danger">Delete</button>
-        </td>
-    `;
-    return row;
-}
-
-// Function to render the table
-function renderTable() {
-    tableContainer.innerHTML = '';
-
-    // Loop through animeData and append rows to the table
-    animeData.forEach((anime) => {
-        const row = createTableRow(anime);
-        tableContainer.appendChild(row);
-    });
-}
-
-// Call the renderTable function to initially render the table
-renderTable();*/
