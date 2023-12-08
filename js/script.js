@@ -233,7 +233,7 @@ function renderAnimeLibraryTable() {
             <td class="align-middle"><span class = "status-cell badge rounded-pill"> ${anime.status}</span></td>
             <td class="col-lg-2 align-middle text-center">
                 <button class="btn btn-info view-ticket" data-ticket-no="${anime.id}">view</button>
-                <button class="btn btn-warning">Edit</button>
+                <button class="btn btn-warning edit">Edit</button>
             </td>
         `;
 
@@ -265,34 +265,53 @@ document.getElementById('addAnimeButton').addEventListener('click', () => {
 
 ///////// VIEW LIBRARY ///////////
 
-// Update the "View" button click handler
+// Add event listener for "View" and "Edit" buttons in the library table
 document.getElementById('animeLibraryTable').addEventListener('click', function (event) {
     const target = event.target;
 
-    // Check if the clicked element is a "View" button
-    if (target.classList.contains('view-ticket')) {
+    // Check if the clicked element is a "View" or "Edit" button
+    if (target.classList.contains('view-ticket') || target.classList.contains('edit')) {
         // Get the anime ID from the data attribute
         const animeID = target.getAttribute('data-ticket-no');
 
         // Find the corresponding anime in the library
         selectedAnime = animeLibrary.find(anime => anime.id === animeID);
 
-        const modalID = 'viewAnimeModal';
+        // Check if the clicked button is "View" or "Edit"
+        if (target.classList.contains('view-ticket')) {
+            // For "View" button
+            const modalID = 'viewAnimeModal';
 
+            // Populate the modal with anime details
+            document.getElementById(`${modalID}-viewID`).textContent = selectedAnime.id;
+            document.getElementById(`${modalID}-viewTitle`).textContent = selectedAnime.title;
+            document.getElementById(`${modalID}-viewGenre`).textContent = selectedAnime.genre;
+            document.getElementById(`${modalID}-viewReleaseYear`).textContent = selectedAnime.releaseYear;
+            document.getElementById(`${modalID}-viewDescription`).textContent = selectedAnime.description;
+            document.getElementById(`${modalID}-viewStatus`).textContent = selectedAnime.status;
 
-        // Populate the modal with anime details
-        document.getElementById(`${modalID}-viewID`).textContent = selectedAnime.id;
-        document.getElementById(`${modalID}-viewTitle`).textContent = selectedAnime.title;
-        document.getElementById(`${modalID}-viewGenre`).textContent = selectedAnime.genre;
-        document.getElementById(`${modalID}-viewReleaseYear`).textContent = selectedAnime.releaseYear;
-        document.getElementById(`${modalID}-viewDescription`).textContent = selectedAnime.description;
-        document.getElementById(`${modalID}-viewStatus`).textContent = selectedAnime.status;
-        // Show the modal
-        $('#viewAnimeModal').modal('show');
+            // Show the modal
+            $('#viewAnimeModal').modal('show');
 
-        const addToWatchlistBtn = document.getElementById('addToWatchlistBtn');
-        // Check if the status is "unlisted" to enable the button, otherwise disable it
-        addToWatchlistBtn.disabled = selectedAnime.status !== 'unlisted';
+            const addToWatchlistBtn = document.getElementById('addToWatchlistBtn');
+            // Check if the status is "unlisted" to enable the button, otherwise disable it
+            addToWatchlistBtn.disabled = selectedAnime.status !== 'unlisted';
+
+        } else if (target.classList.contains('edit')) {
+            // For "Edit" button
+            const modalID = 'editAnimeModal';
+
+            // Populate the edit modal with anime details
+/*            document.getElementById(`${modalID}-editTitle`).value = selectedAnime.title;*/
+/*            document.getElementById(`${modalID}-editGenre`).value = selectedAnime.genre;
+            document.getElementById(`${modalID}-editReleaseYear`).value = selectedAnime.releaseYear;
+            document.getElementById(`${modalID}-editDescription`).value = selectedAnime.description;
+            document.getElementById(`${modalID}-editStatus`).value = selectedAnime.status;*/
+
+            // Show the edit modal
+            $(`#${modalID}`).modal('show');
+
+       }
     }
 });
 
@@ -316,7 +335,7 @@ document.getElementById('addToWatchlistBtn').addEventListener('click', function 
 document.getElementById('animeWatchlistTable').addEventListener('click', function (event) {
     const target = event.target;
 
-    // Check if the clicked element is a "Delete" button
+    // Check if the clicked element is a "Delete" button (watchlist)
     if (target.classList.contains('delete')) {
         // Get the anime ID from the data attribute
         const animeID = target.getAttribute('data-ticket-no');
@@ -447,6 +466,9 @@ function addToOngoingAndRemoveFromWatchlist(anime) {
 
     // Update the watchlist table
     renderWatchlistTable();
+
+    // Show a success notification
+    showNotification('Successfully added "${anime.title}" to watching', 'success');
 }
 
 
@@ -531,6 +553,34 @@ function getCurrentDate() {
     const year = today.getFullYear().toString().slice(2);
     return `${month}/${day}/${year}`;
 }
+
+
+
+
+
+function showNotification(message, backgroundColor) {
+    // Create an alert element
+    const alert = document.createElement('div');
+    alert.className = `alert alert-dismissible fade show alert-${backgroundColor}`;
+    alert.role = 'alert';
+    alert.textContent = message;
+
+    // Create a close button
+    const closeButton = document.createElement('button');
+    closeButton.type = 'button';
+    closeButton.className = 'close';
+    closeButton.setAttribute('data-dismiss', 'alert');
+    closeButton.innerHTML = '<span aria-hidden="true">&times;</span>';
+
+    // Append the close button to the alert
+    alert.appendChild(closeButton);
+
+    // Append the alert to the body
+    document.body.appendChild(alert);
+}
+
+
+
 
 
 
