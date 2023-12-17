@@ -1,0 +1,22 @@
+{
+  "name": "watchlist",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/indyilvllrll/watchlisttest.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/indyilvllrll/watchlisttest/issues"
+  },
+  "homepage": "https://github.com/indyilvllrll/watchlisttest#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
