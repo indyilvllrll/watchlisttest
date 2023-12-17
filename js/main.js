@@ -90,7 +90,7 @@ let animeLibrary = [
 let watchlist = [
 
     {
-        id: 'ANI-00010',
+        id: 'ANI-00009',
         title: 'Tokyo Ghoul',
         genre: 'Horror, Mystery, Supernatural',
         releaseYear: '2014',
@@ -98,7 +98,7 @@ let watchlist = [
         status: 'watchlist'
     },
     {
-        id: 'ANI-00011',
+        id: 'ANI-00010',
         title: 'Hunter x Hunter',
         genre: 'Action, Adventure, Fantasy',
         releaseYear: '2011',
