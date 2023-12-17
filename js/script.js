@@ -70,7 +70,7 @@ let animeLibrary = [
         status: 'unlisted'
     },
     {
-        id: 'ANI-00010',
+        id: 'ANI-00009',
         title: 'Tokyo Ghoul',
         genre: 'Horror, Mystery, Supernatural',
         releaseYear: '2014',
@@ -78,7 +78,7 @@ let animeLibrary = [
         status: 'watchlist'
     },
     {
-        id: 'ANI-00011',
+        id: 'ANI-00010',
         title: 'Hunter x Hunter',
         genre: 'Action, Adventure, Fantasy',
         releaseYear: '2011',
@@ -191,7 +191,7 @@ function addAnime() {
     }
 
     // Generate anime ID (incremental)
-    const animeID = `ANI-${String(100000 + animeLibrary.length + 2).slice(1)}`;
+    const animeID = `ANI-${String(100000 + animeLibrary.length + 1).slice(1)}`;
 
     // Add the new anime to the library
     animeLibrary.push({
@@ -205,6 +205,8 @@ function addAnime() {
 
     // Update the table
     renderAnimeLibraryTable();
+    updateStatusCards();
+
 
     // Clear the form
     document.getElementById('addAnimeForm').reset();
@@ -214,10 +216,25 @@ function addAnime() {
 }
 
 
+
+
+
+
+
+
+
+
+
+
 // Add classes based on the anime's status
 function addClassesToElement(element, classes) {
     element.classList.add(...classes);
 }
+
+
+
+
+
 function renderAnimeLibraryTable() {
     const tableBody = document.getElementById('animeLibraryTable').getElementsByTagName('tbody')[0];
     tableBody.innerHTML = '';
@@ -233,7 +250,7 @@ function renderAnimeLibraryTable() {
             <td class="align-middle"><span class = "status-cell badge rounded-pill"> ${anime.status}</span></td>
             <td class="col-lg-2 align-middle text-center">
                 <button class="btn btn-info view-ticket" data-ticket-no="${anime.id}">view</button>
-                <button class="btn btn-warning edit">Edit</button>
+                <button class="btn btn-warning edit-ticket"data-ticket-no="${anime.id}">Edit</button>
             </td>
         `;
 
@@ -262,8 +279,39 @@ document.getElementById('addAnimeButton').addEventListener('click', () => {
 });
 
 
+// Function to update anime data in all tables
+function updateAnimeData(animeID, updatedAnimeData) {
+    // Update the anime data in the library
+    const libraryIndex = animeLibrary.findIndex(anime => anime.id === animeID);
+    if (libraryIndex !== -1) {
+        animeLibrary[libraryIndex] = updatedAnimeData;
+    }
 
-///////// VIEW LIBRARY ///////////
+    // Update the anime data in the watchlist
+    const watchlistIndex = watchlist.findIndex(anime => anime.id === animeID);
+    if (watchlistIndex !== -1) {
+        watchlist[watchlistIndex] = updatedAnimeData;
+    }
+
+    // Update the anime data in the ongoing list
+    const ongoingIndex = ongoing.findIndex(anime => anime.id === animeID);
+    if (ongoingIndex !== -1) {
+        ongoing[ongoingIndex] = updatedAnimeData;
+    }
+
+    // Update the anime data in the completed list
+    const completedIndex = completed.findIndex(anime => anime.id === animeID);
+    if (completedIndex !== -1) {
+        completed[completedIndex] = updatedAnimeData;
+    }
+    // Update the tables
+    renderAnimeLibraryTable();
+    renderWatchlistTable();
+    renderOngoinglistTable();
+    renderCompletedTable();
+
+}
+
 
 // Add event listener for "View" and "Edit" buttons in the library table
 document.getElementById('animeLibraryTable').addEventListener('click', function (event) {
@@ -277,9 +325,6 @@ document.getElementById('animeLibraryTable').addEventListener('click', function 
         // Find the corresponding anime in the library
         selectedAnime = animeLibrary.find(anime => anime.id === animeID);
 
-        // Check if the clicked button is "View" or "Edit"
-        if (target.classList.contains('view-ticket')) {
-            // For "View" button
             const modalID = 'viewAnimeModal';
 
             // Populate the modal with anime details
@@ -291,27 +336,15 @@ document.getElementById('animeLibraryTable').addEventListener('click', function 
             document.getElementById(`${modalID}-viewStatus`).textContent = selectedAnime.status;
 
             // Show the modal
-            $('#viewAnimeModal').modal('show');
+        $('#viewAnimeModal').modal('show');
+        // Add event listener for the "Update" button inside the modal
+
 
             const addToWatchlistBtn = document.getElementById('addToWatchlistBtn');
             // Check if the status is "unlisted" to enable the button, otherwise disable it
-            addToWatchlistBtn.disabled = selectedAnime.status !== 'unlisted';
+        addToWatchlistBtn.disabled = selectedAnime.status !== 'unlisted';
 
-        } else if (target.classList.contains('edit')) {
-            // For "Edit" button
-            const modalID = 'editAnimeModal';
 
-            // Populate the edit modal with anime details
-/*            document.getElementById(`${modalID}-editTitle`).value = selectedAnime.title;*/
-/*            document.getElementById(`${modalID}-editGenre`).value = selectedAnime.genre;
-            document.getElementById(`${modalID}-editReleaseYear`).value = selectedAnime.releaseYear;
-            document.getElementById(`${modalID}-editDescription`).value = selectedAnime.description;
-            document.getElementById(`${modalID}-editStatus`).value = selectedAnime.status;*/
-
-            // Show the edit modal
-            $(`#${modalID}`).modal('show');
-
-       }
     }
 });
 
@@ -364,6 +397,8 @@ document.getElementById('animeWatchlistTable').addEventListener('click', functio
 
                     // Update the watchlist table
                     renderWatchlistTable();
+                    updateStatusCards();
+
                     // Close the modal
                     $('#deleteConfirmationModal').modal('hide');
                 }
@@ -429,6 +464,8 @@ function addToWatchlist(anime) {
 
     // Update the watchlist table
     renderWatchlistTable();
+    updateStatusCards();
+
 }
 
 
@@ -438,6 +475,7 @@ function addToWatchlist(anime) {
 
 function addToOngoingAndRemoveFromWatchlist(anime) {
     // Remove the anime from the watchlist
+
     const watchlistIndex = watchlist.findIndex(watchedAnime => watchedAnime.id === anime.id);
     if (watchlistIndex !== -1) {
         watchlist.splice(watchlistIndex, 1);
@@ -466,9 +504,9 @@ function addToOngoingAndRemoveFromWatchlist(anime) {
 
     // Update the watchlist table
     renderWatchlistTable();
+    updateStatusCards();
 
     // Show a success notification
-    showNotification('Successfully added "${anime.title}" to watching', 'success');
 }
 
 
@@ -506,8 +544,11 @@ function renderOngoinglistTable() {
     });
     // Add click handler for "Add to Ongoing" button inside the modal
 }
+
 document.getElementById('addToOngoingBtn').addEventListener('click', function () {
     // Check if the status is "unlisted"
+    console.log('selectedAnime:', selectedAnime);
+
     if (selectedAnime.status === 'watchlist') {
         // Add the anime to the ongoing list and remove from the watchlist
         addToOngoingAndRemoveFromWatchlist(selectedAnime);
@@ -546,6 +587,247 @@ document.getElementById('animeWatchlistTable').addEventListener('click', functio
     }
 });
 
+
+document.getElementById('animeLibraryTable').addEventListener('click', function (event) {
+    const target = event.target;
+
+    // Check if the clicked element is a "View" button
+    if (target.classList.contains('edit-ticket')) {
+        // Get the anime ID from the data attribute
+        const animeID = target.getAttribute('data-ticket-no');
+
+        // Find the corresponding anime in the library
+        const selectedAnime = animeLibrary.find(anime => anime.id === animeID);
+
+        const modalID = 'editAnimeModal'; // Correct modal ID
+
+        // Populate the modal with anime details
+        document.getElementById(`${modalID}-editTitle`).value = selectedAnime.title;
+        document.getElementById(`${modalID}-editGenre`).value = selectedAnime.genre;
+        document.getElementById(`${modalID}-editReleaseYear`).value = selectedAnime.releaseYear;
+        document.getElementById(`${modalID}-editDescription`).value = selectedAnime.description;
+        document.getElementById(`${modalID}-editStatus`).value = selectedAnime.status;
+
+        // Show the modal
+        $(`#${modalID}`).modal('show');
+
+        document.getElementById('saveChangesBtn').addEventListener('click', function () {
+            // Get the updated anime data from the modal inputs
+            const updatedAnimeData = {
+                id: animeID,
+                title: document.getElementById(`${modalID}-editTitle`).value,
+                genre: document.getElementById(`${modalID}-editGenre`).value,
+                releaseYear: document.getElementById(`${modalID}-editReleaseYear`).value,
+                description: document.getElementById(`${modalID}-editDescription`).value,
+                status: document.getElementById(`${modalID}-editStatus`).value
+            };
+
+            // Update the anime data in all tables
+            updateAnimeData(animeID, updatedAnimeData);
+            // Hide the modal
+            $(`#${modalID}`).modal('hide');
+
+
+
+        });
+    }
+}); 
+
+document.getElementById('animeOngoinglistTable').addEventListener('click', function (event) {
+     target = event.target;
+     animeID = target.getAttribute('data-ticket-no');
+
+     selectedAnime = ongoing.find(anime => anime.id === animeID);
+    // Check if the clicked element is a "View" button
+    if (target.classList.contains('view-ticket')) {
+        // Get the anime ID from the data attribute
+        const animeID = target.getAttribute('data-ticket-no');
+
+        // Find the corresponding anime in the library
+        const selectedAnime = ongoing.find(anime => anime.id === animeID);
+
+        const modalID = 'viewOngoingModal'; // Correct modal ID
+
+        // Populate the modal with anime details
+        document.getElementById(`${modalID}-viewID`).textContent = selectedAnime.id;
+        document.getElementById(`${modalID}-viewTitle`).textContent = selectedAnime.title;
+        document.getElementById(`${modalID}-viewGenre`).textContent = selectedAnime.genre;
+        document.getElementById(`${modalID}-viewReleaseYear`).textContent = selectedAnime.releaseYear;
+        document.getElementById(`${modalID}-viewDescription`).textContent = selectedAnime.description;
+        document.getElementById(`${modalID}-viewDateStarted`).textContent = selectedAnime.dateStarted; // Correct ID
+        document.getElementById(`${modalID}-viewStatus`).textContent = selectedAnime.status;
+
+        // Show the modal
+        $(`#${modalID}`).modal('show');
+
+
+
+
+    }
+
+
+
+});
+
+// Add click handler for "Add to Completed" button outside of the above click event
+
+
+document.getElementById('addToCompletedBtn').addEventListener('click', function () {
+    // Check if the status is "ongoing"
+    console.log('selectedAnime:', selectedAnime.status);
+    if (selectedAnime.status === 'ongoing') {
+        // Add the anime to the completed list and remove from ongoing
+        addToCompletedAndRemoveFromOngoing(selectedAnime);
+
+        // Close the modal
+        $('#viewOngoingModal').modal('hide');
+    }
+});
+
+
+
+
+
+function renderCompletedTable() {
+    const tableBody = document.getElementById('animeCompletedTable').getElementsByTagName('tbody')[0];
+    tableBody.innerHTML = '';
+
+    completed.forEach(anime => {
+        const row = tableBody.insertRow();
+        row.innerHTML = `
+            <td class="align-middle">${anime.id}</td>
+            <td class="align-middle">${anime.title}</td>
+            <td class="align-middle">${anime.genre}</td>
+            <td class="align-middle">${anime.releaseYear}</td>
+            <td class="align-middle">${anime.description}</td>
+            <td class="align-middle">${anime.dateStarted}</td>
+            <td class="align-middle">${anime.dateCompleted}</td>
+            <td class="align-middle"><span class = "status-cell badge rounded-pill"> ${anime.status}</span></td>
+            <td class="col-lg-2 align-middle text-center">
+                <button class="btn btn-info view-ticket" data-ticket-no="${anime.id}">view</button>
+            </td>
+        `;
+
+        const statusCell = row.querySelector('.status-cell');
+
+        // Add classes based on the anime's status
+        if (anime.status === 'ongoing') {
+            addClassesToElement(statusCell, ['text-bg-warning']);
+        } else if (anime.status === 'completed') {
+            addClassesToElement(statusCell, ['text-bg-success']);
+        } else if (anime.status === 'unlisted') {
+            addClassesToElement(statusCell, ['text-bg-secondary']);
+        } else if (anime.status === 'watchlist') {
+            addClassesToElement(statusCell, ['text-bg-light']);
+        }
+    });
+
+
+}
+
+
+
+
+
+
+
+function addToCompletedAndRemoveFromOngoing(anime) {
+    // Remove the anime from the watchlist
+
+
+
+
+
+    const ongoingIndex = ongoing.findIndex(watcheAnime => watcheAnime.id === anime.id);
+    if (ongoingIndex !== -1) {
+        ongoing.splice(ongoingIndex, 1);
+    }
+
+    // Update the anime's status in the library to "ongoing"
+    const libraryIndex = animeLibrary.findIndex(libraryAnime => libraryAnime.id === anime.id);
+    if (libraryIndex !== -1) {
+        animeLibrary[libraryIndex].status = 'completed';
+        renderAnimeLibraryTable(); // Update the library table
+    }
+
+    // Add the anime to the ongoing list
+    completed.push({
+        id: anime.id,
+        title: anime.title,
+        genre: anime.genre,
+        releaseYear: anime.releaseYear,
+        description: anime.description,
+        dateStarted: anime.dateStarted,
+        dateCompleted: getCurrentDate(),
+        status: 'completed',
+    });
+
+    // Update the ongoing list table
+    renderOngoinglistTable();
+
+    // Update the watchlist table
+    renderCompletedTable();
+
+    updateStatusCards();
+
+    // Show a success notification
+
+}
+
+
+
+
+document.getElementById('animeCompletedTable').addEventListener('click', function (event) {
+    target = event.target;
+
+    // Check if the clicked element is a "View" button
+    if (target.classList.contains('view-ticket')) {
+        // Get the anime ID from the data attribute
+        const animeID = target.getAttribute('data-ticket-no');
+
+        // Find the corresponding anime in the library
+        const selectedAnime = completed.find(anime => anime.id === animeID);
+
+        const modalID = 'viewCompletedModal'; // Correct modal ID
+
+        // Populate the modal with anime details
+        document.getElementById(`${modalID}-viewID`).textContent = selectedAnime.id;
+        document.getElementById(`${modalID}-viewTitle`).textContent = selectedAnime.title;
+        document.getElementById(`${modalID}-viewGenre`).textContent = selectedAnime.genre;
+        document.getElementById(`${modalID}-viewReleaseYear`).textContent = selectedAnime.releaseYear;
+        document.getElementById(`${modalID}-viewDescription`).textContent = selectedAnime.description;
+        document.getElementById(`${modalID}-viewDateStarted`).textContent = selectedAnime.dateStarted; // Correct ID
+        document.getElementById(`${modalID}-viewStatus`).textContent = selectedAnime.status;
+
+        // Show the modal
+        $(`#${modalID}`).modal('show');
+
+
+
+
+    }
+    
+});
+
+
+function updateStatusCards() {
+    // Get counts for animeLibrary, completed, and ongoing
+    const totalAnimeCount = animeLibrary.length;
+    const watchedCount = completed.length;
+    const ongoingCount = ongoing.length;
+
+    // Update the h2 elements in the HTML
+    document.getElementById('totalAnimeCount').textContent = totalAnimeCount;
+    document.getElementById('watchedCount').textContent = watchedCount;
+    document.getElementById('ongoingCount').textContent = ongoingCount;
+}
+
+
+
+
+
+
+
 function getCurrentDate() {
     const today = new Date();
     const month = today.getMonth() + 1; // Months are zero-based
@@ -558,30 +840,6 @@ function getCurrentDate() {
 
 
 
-function showNotification(message, backgroundColor) {
-    // Create an alert element
-    const alert = document.createElement('div');
-    alert.className = `alert alert-dismissible fade show alert-${backgroundColor}`;
-    alert.role = 'alert';
-    alert.textContent = message;
-
-    // Create a close button
-    const closeButton = document.createElement('button');
-    closeButton.type = 'button';
-    closeButton.className = 'close';
-    closeButton.setAttribute('data-dismiss', 'alert');
-    closeButton.innerHTML = '<span aria-hidden="true">&times;</span>';
-
-    // Append the close button to the alert
-    alert.appendChild(closeButton);
-
-    // Append the alert to the body
-    document.body.appendChild(alert);
-}
-
-
-
-
 
 
 
@@ -590,5 +848,7 @@ window.onload = function () {
     renderWatchlistTable();
     renderAnimeLibraryTable();
     renderOngoinglistTable();
+    renderCompletedTable();
+    updateStatusCards();
 };
 
